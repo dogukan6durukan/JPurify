@@ -1,6 +1,7 @@
 export class Dom {
     constructor() {
-        this.events = ["click"]
+        this.events = ["click"];
+        this.element = "";
         this.state = 0;
     }
 
@@ -8,13 +9,11 @@ export class Dom {
         if(el && ev && callback) {
             let element = document.querySelector(el);
             if(element) {
-
                 for(let event of this.events) {
                     if(event === ev) {
                         element.addEventListener(event, callback);
                     } 
                 }
-
             } else {
                 console.error("The element doesn't exist")
             }
@@ -22,7 +21,37 @@ export class Dom {
 
     }
 
-    add(el) {}
+    insert(parent) {
+        let parentEl = document.querySelector(parent);
+        if(parentEl) {
+            parentEl.appendChild(this.element);
+            return this;
+        }
+    }
+
+    addText(text) {
+        if(this.element !== "") {
+            this.element.textContent = text;
+        }
+        return this;
+    }
+
+    addClass(className) {
+        if(this.element !== "") {
+            this.element.classList.add(className);
+            return this;
+        }
+    }
+
+    add(parent, el) {
+        let parentEl = document.querySelector(parent);
+        if(parentEl) {
+            let element = document.createElement(el);
+            parentEl.insertAdjacentElement("afterend", element);
+            this.element = element;
+            return this;
+        }
+    }
 
     remove(el, callback) {
         let element = document.querySelector(el);
@@ -61,12 +90,13 @@ export class Dom {
 }
 
 const cls = new Dom();
+// cls.add("p", "p").addClass("clicked").addText("hello, how low!").insert(".foo");
 
-cls.on(".btn","click",(e) => {
-    cls.toggle(".foo", "toggle", () => {
-        console.log("toggle finished");
-    });
-    cls.remove("#greet", () => {
-        console.log("removed");
-    })
-});
+// cls.on(".btn","click",(e) => {
+//     cls.toggle(".foo", "toggle", () => {
+//         console.log("toggle finished");
+//     });
+//     cls.remove("#greet", () => {
+//         console.log("removed");
+//     })
+// });
