@@ -1,6 +1,7 @@
 export class Dom {
     constructor() {
         this.events = ["click"]
+        this.state = 0;
     }
 
     on(el, ev, callback) {
@@ -10,7 +11,7 @@ export class Dom {
 
                 for(let event of this.events) {
                     if(event === ev) {
-                        document.addEventListener(event, () => callback());
+                        element.addEventListener(event, callback);
                     } 
                 }
 
@@ -21,20 +22,33 @@ export class Dom {
 
     }
 
-    toggle(el, state) {
+    add(el) {}
 
+    remove(el, callback) {
+        let element = document.querySelector(el);
+        if(element) {
+            element.remove();
+            callback();
+        }   
+    }
+
+    toggle(el, state, callback) {
         if(el && state) {
-            let element = document.querySelector(el)
+            let element = document.querySelector(el);
             if(element) {
-
                 if(state === "display") {
-                    element.style.display = "visible";
+                    element.style.display = "block";
                 } else if(state === "hide") {
                     element.style.display = "none";
-                } 
-                else {
-                    console.error("State must be 'display' either 'hide'")
+                } else if(state === "toggle") {
+                    element.style.display === "none" ?
+                    element.style.display = "block" : element.style.display = "none";
                 }
+                else {
+                    console.error("State must be 'display', 'hide' or 'toggle'")
+                }
+
+                callback();
 
             } else {
                 console.error("Element doesn't exist!");
@@ -46,3 +60,13 @@ export class Dom {
     }
 }
 
+const cls = new Dom();
+
+cls.on(".btn","click",(e) => {
+    cls.toggle(".foo", "toggle", () => {
+        console.log("toggle finished");
+    });
+    cls.remove("#greet", () => {
+        console.log("removed");
+    })
+});
