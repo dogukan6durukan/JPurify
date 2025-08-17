@@ -2,7 +2,6 @@ export class Dom {
     constructor() {
         this.events = ["click", "change"];
         this.element = [];
-        this.state = 0;
     }
 
     on(el, ev, callback) {
@@ -21,10 +20,11 @@ export class Dom {
 
     }
 
+    // !!!
     select(el) {
         let element = document.querySelectorAll(el);
         if(element) {
-            this.element = [...element];
+            this.element = element
             return this;
         } else {
             console.error("The element doesn't exist");
@@ -38,10 +38,11 @@ export class Dom {
     }
 
     css(prop, val) {
-        if(prop && val)  {
+        if(prop && val) {
             for(let el of this.element) {
-                console.log(el.style[prop] = val);
+                el.style[prop] = val;
             }
+            return this;
         }
     }
 
@@ -71,12 +72,35 @@ export class Dom {
         }
     }
 
-    add(parent, el) {
-        let parentEl = document.querySelector(parent);
-        if(parentEl) {
-            let element = document.createElement(el);
-            parentEl.insertAdjacentElement("afterend", element);
-            this.element = element;
+    add(elem, position) {
+        const POSITIONS = {
+            before : "beforebegin",
+            first : "afterbegin",
+            last : "beforeend",
+            after : "afterend"
+        }
+
+        if(elem && position) {
+
+            switch (position) {
+                case "before":
+                    position = POSITIONS.before;
+                break;
+                case "first":
+                    position = POSITIONS.first;
+                break;
+                case "last":
+                    position = POSITIONS.last;
+                break;
+                case "after":
+                    position = POSITIONS.after;
+                break;
+            }
+
+            for(let el of this.element) {
+                let element = document.createElement(elem);
+                el.insertAdjacentElement(position, element);
+            }
             return this;
         }
     }
@@ -118,4 +142,6 @@ export class Dom {
 }
 
 const cls = new Dom();
-cls.select("#greet").addText("hi").addClass("clicked").css("color", "green");
+cls.select(".my-box").add("p", "first");
+// cls.select("#greet").addText("hi").addClass("clicked").css("color", "green");
+cls.select("#greet").addText("hi").css("background", "red").css("color", "yellow").css("padding", "16px");
