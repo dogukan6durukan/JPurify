@@ -1,7 +1,7 @@
 export class Dom {
     constructor() {
-        this.events = ["click"];
-        this.element = "";
+        this.events = ["click", "change"];
+        this.element = [];
         this.state = 0;
     }
 
@@ -15,10 +15,34 @@ export class Dom {
                     } 
                 }
             } else {
-                console.error("The element doesn't exist")
+                console.error("The element doesn't exist");
             }
         }
 
+    }
+
+    select(el) {
+        let element = document.querySelectorAll(el);
+        if(element) {
+            this.element = [...element];
+            return this;
+        } else {
+            console.error("The element doesn't exist");
+        }
+    }
+
+    create(el) {
+        let element = document.createElement(el);
+        this.element = element;
+        return this;
+    }
+
+    css(prop, val) {
+        if(prop && val)  {
+            for(let el of this.element) {
+                console.log(el.style[prop] = val);
+            }
+        }
     }
 
     insert(parent) {
@@ -31,14 +55,18 @@ export class Dom {
 
     addText(text) {
         if(this.element !== "") {
-            this.element.textContent = text;
+            for(let el of this.element) {
+                el.textContent = text;
+            }
         }
         return this;
     }
 
     addClass(className) {
         if(this.element !== "") {
-            this.element.classList.add(className);
+            for(let el of this.element) {
+                el.classList.add(className);
+            }
             return this;
         }
     }
@@ -77,7 +105,7 @@ export class Dom {
                     console.error("State must be 'display', 'hide' or 'toggle'")
                 }
 
-                callback();
+                callback === undefined ? "" : callback();
 
             } else {
                 console.error("Element doesn't exist!");
@@ -90,13 +118,4 @@ export class Dom {
 }
 
 const cls = new Dom();
-// cls.add("p", "p").addClass("clicked").addText("hello, how low!").insert(".foo");
-
-// cls.on(".btn","click",(e) => {
-//     cls.toggle(".foo", "toggle", () => {
-//         console.log("toggle finished");
-//     });
-//     cls.remove("#greet", () => {
-//         console.log("removed");
-//     })
-// });
+cls.select("#greet").addText("hi").addClass("clicked").css("color", "green");

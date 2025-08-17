@@ -6,7 +6,10 @@ import { Dom } from "./main.js"
 
 const cls = new Dom();
 
-cls.on(".btn","click",() => {
-    cls.toggle(".foo", "hide");
-});
+cls.create("p").addClass("clicked").addText("hellloo").insert(".foo");
+
+cls.on("input", "change", (e) => {
+    cls.toggle(".foo", "toggle")
+})
+
  ```
