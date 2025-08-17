@@ -1,16 +1,28 @@
 export class Dom {
     constructor() {
-        this.events = ["click", "change"];
+        this.events = [
+            "click",
+            "change",
+            "dblclick",
+            "mousedown",
+            "mouseup",
+            "keyup",
+            "keydown",
+            "keypress",
+            "mouseenter",
+            "mouseleave",
+            "mouseover"
+        ];
         this.element = [];
     }
 
-    on(el, ev, callback) {
-        if(el && ev && callback) {
-            let element = document.querySelector(el);
-            if(element) {
+    on(ev, callback) {
+        if(ev && callback) {
+            if(this.element) {
                 for(let event of this.events) {
                     if(event === ev) {
-                        element.addEventListener(event, callback);
+                        // Check for multiple elements
+                        this.element[0].addEventListener(event, callback);
                     } 
                 }
             } else {
@@ -18,6 +30,42 @@ export class Dom {
             }
         }
 
+    }
+
+    // Make a shortcut for both odd and even
+    odd() {
+        let elements = [];
+        for(let i = 0; i < this.element.length; i++) {
+            // console.log(this.element[i], i);
+            elements.push( { el : this.element[i], order : i+1 } )
+        }
+        let oddElems = [];
+        for(let el of elements) {
+            if(el.order % 2 === 1) {
+                oddElems.push(el.el);
+            }
+        }
+
+        this.element = oddElems;
+        return this;
+    }
+
+    // Make a shortcut for both odd and even
+    even() {
+        let elements = [];
+        for(let i = 0; i < this.element.length; i++) {
+            // console.log(this.element[i], i);
+            elements.push( { el : this.element[i], order : i+1 } )
+        }
+        let oddElems = [];
+        for(let el of elements) {
+            if(el.order % 2 === 0) {
+                oddElems.push(el.el);
+            }
+        }
+
+        this.element = oddElems;
+        return this;
     }
 
     // !!!
@@ -113,6 +161,11 @@ export class Dom {
         }   
     }
 
+    empty() {
+        // Check for multiple elements
+        this.element[0].replaceChildren();
+    }
+
     toggle(el, state, callback) {
         if(el && state) {
             let element = document.querySelector(el);
@@ -142,6 +195,5 @@ export class Dom {
 }
 
 const cls = new Dom();
-cls.select(".my-box").add("p", "first");
-// cls.select("#greet").addText("hi").addClass("clicked").css("color", "green");
-cls.select("#greet").addText("hi").css("background", "red").css("color", "yellow").css("padding", "16px");
+// console.log(cls.create("li").addClass(".clicked"));
+// cls.select("li").odd().css("background", "red");
