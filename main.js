@@ -1,18 +1,8 @@
+import { EVENTS } from "./events.js";
+
 export class Dom {
     constructor() {
-        this.events = [
-            "click",
-            "change",
-            "dblclick",
-            "mousedown",
-            "mouseup",
-            "keyup",
-            "keydown",
-            "keypress",
-            "mouseenter",
-            "mouseleave",
-            "mouseover"
-        ];
+        this.events = EVENTS;
         this.element = [];
     }
 
@@ -32,42 +22,6 @@ export class Dom {
 
     }
 
-    // Make a shortcut for both odd and even
-    odd() {
-        let elements = [];
-        for(let i = 0; i < this.element.length; i++) {
-            // console.log(this.element[i], i);
-            elements.push( { el : this.element[i], order : i+1 } )
-        }
-        let oddElems = [];
-        for(let el of elements) {
-            if(el.order % 2 === 1) {
-                oddElems.push(el.el);
-            }
-        }
-
-        this.element = oddElems;
-        return this;
-    }
-
-    // Make a shortcut for both odd and even
-    even() {
-        let elements = [];
-        for(let i = 0; i < this.element.length; i++) {
-            // console.log(this.element[i], i);
-            elements.push( { el : this.element[i], order : i+1 } )
-        }
-        let oddElems = [];
-        for(let el of elements) {
-            if(el.order % 2 === 0) {
-                oddElems.push(el.el);
-            }
-        }
-
-        this.element = oddElems;
-        return this;
-    }
-
     // !!!
     select(el) {
         let element = document.querySelectorAll(el);
@@ -79,11 +33,26 @@ export class Dom {
         }
     }
 
+    
     create(el) {
         let element = document.createElement(el);
-        this.element = element;
+        this.element = [element];
         return this;
     }
+
+    oddEvenFilter(isOdd) {
+        this.element =  [...this.element].filter((el, i) => (i + 1) % 2 === (isOdd ? 1 : 0));
+        return this;
+    }
+
+    odd() {
+        return this.oddEvenFilter(true);
+    }
+
+    even() {
+        return this.oddEvenFilter(false);
+    }
+
 
     css(prop, val) {
         if(prop && val) {
@@ -97,7 +66,9 @@ export class Dom {
     insert(parent) {
         let parentEl = document.querySelector(parent);
         if(parentEl) {
-            parentEl.appendChild(this.element);
+            for(let el of this.element) {
+                parentEl.appendChild(el);
+            }
             return this;
         }
     }
@@ -114,6 +85,7 @@ export class Dom {
     addClass(className) {
         if(this.element !== "") {
             for(let el of this.element) {
+                // console.log(el);
                 el.classList.add(className);
             }
             return this;
@@ -195,5 +167,6 @@ export class Dom {
 }
 
 const cls = new Dom();
-// console.log(cls.create("li").addClass(".clicked"));
-// cls.select("li").odd().css("background", "red");
+cls.select(".btn").on("click", () => {
+    cls.create("li").addClass("clicked").addText("hello!").insert(".foo ul");    
+});
