@@ -1,7 +1,9 @@
 import { EVENTS } from "./events.js";
+import { PlayGround } from "./playground.js";
 
-export class Dom {
+export class Dom extends PlayGround{
     constructor() {
+        super();
         this.events = EVENTS;
         this.element = [];
     }
@@ -22,7 +24,6 @@ export class Dom {
 
     }
 
-    // !!!
     select(el) {
         let element = document.querySelectorAll(el);
         if(element) {
@@ -52,7 +53,6 @@ export class Dom {
     even() {
         return this.oddEvenFilter(false);
     }
-
 
     css(prop, val) {
         if(prop && val) {
@@ -138,35 +138,24 @@ export class Dom {
         this.element[0].replaceChildren();
     }
 
-    toggle(el, state, callback) {
-        if(el && state) {
-            let element = document.querySelector(el);
-            if(element) {
-                if(state === "display") {
-                    element.style.display = "block";
-                } else if(state === "hide") {
-                    element.style.display = "none";
-                } else if(state === "toggle") {
-                    element.style.display === "none" ?
-                    element.style.display = "block" : element.style.display = "none";
-                }
-                else {
-                    console.error("State must be 'display', 'hide' or 'toggle'")
-                }
-
-                callback === undefined ? "" : callback();
-
-            } else {
-                console.error("Element doesn't exist!");
-            }
-        }    
-        else {
-            console.error("Invalid element");
+    val() {
+        if(this.element[0].value) {
+            return this.element[0].value;
         }
     }
-}
 
-const cls = new Dom();
-cls.select(".btn").on("click", () => {
-    cls.create("li").addClass("clicked").addText("hello!").insert(".foo ul");    
-});
+    attr(name, setVal) {
+        if(name) {
+            for(let el of this.element) {
+                let val = el.getAttribute(name);
+                if(setVal) {
+                    el.setAttribute(name, setVal);
+                } else {
+                    return val ? true : false;
+                }
+
+            }
+        } 
+    }
+
+}
