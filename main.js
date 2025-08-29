@@ -8,13 +8,15 @@ export class Dom extends PlayGround{
         this.element = [];
     }
 
+    //
     on(ev, callback) {
         if(ev && callback) {
             if(this.element) {
                 for(let event of this.events) {
                     if(event === ev) {
-                        // Check for multiple elements
-                        this.element[0].addEventListener(event, callback);
+                        for(let el of this.element) {
+                            el.addEventListener(event, callback);
+                        }
                     } 
                 }
             } else {
@@ -71,6 +73,16 @@ export class Dom extends PlayGround{
             }
             return this;
         }
+    }
+
+    insertLast(parent) {
+        let parentEl = document.querySelectorAll(parent);
+        let last = parentEl[parentEl.length - 1];
+        for(let el of this.element) {
+            last.appendChild(el);
+        }
+
+        return this;
     }
 
     addText(text) {
