@@ -8,17 +8,22 @@ export class Dom extends PlayGround{
         this.element = [];
     }
 
-    //
     on(ev, callback) {
+        
         if(ev && callback) {
             if(this.element) {
                 for(let event of this.events) {
                     if(event === ev) {
                         for(let el of this.element) {
-                            el.addEventListener(event, callback);
+                            el.addEventListener(event, (e) => {
+                                const self = new Dom();
+                                self.element = [e.currentTarget];
+                                callback.call(self, self);
+                            });
                         }
                     } 
                 }
+
             } else {
                 console.error("The element doesn't exist");
             }
@@ -26,18 +31,37 @@ export class Dom extends PlayGround{
 
     }
 
+
     select(el) {
         let element = document.querySelectorAll(el);
         if(element) {
-            this.element = element
+            this.element = element;
             return this;
         } else {
             console.error("The element doesn't exist");
         }
     }
 
+    parent() {
+        this.element = [this.element[0].parentElement];
+        return this;
+    }
+
+    prevSibling() {
+        this.element = [this.element[0].previousElementSibling];
+        console.log(this.element);
+        return this;
+    }
+
     
+    empty() {
+        // Check for multiple elements
+        this.element[0].remove();
+    }
+
+
     create(el) {
+        // Check if already exists or something
         let element = document.createElement(el);
         this.element = [element];
         return this;
@@ -86,6 +110,7 @@ export class Dom extends PlayGround{
     }
 
     addText(text) {
+        // console.log(this.element);
         if(this.element !== "") {
             for(let el of this.element) {
                 el.textContent = text;
@@ -94,10 +119,10 @@ export class Dom extends PlayGround{
         return this;
     }
 
+
     addClass(className) {
         if(this.element !== "") {
             for(let el of this.element) {
-                // console.log(el);
                 el.classList.add(className);
             }
             return this;
@@ -145,13 +170,13 @@ export class Dom extends PlayGround{
         }   
     }
 
-    empty() {
-        // Check for multiple elements
-        this.element[0].replaceChildren();
-    }
-
-    val() {
+    val(val) {
         if(this.element[0].value) {
+            
+            if(val) {
+                this.element[0].value = val;
+            }
+
             return this.element[0].value;
         }
     }

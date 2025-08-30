@@ -2,20 +2,34 @@ JQuery like helper utility stuff but without leaving the Javascript syntax.
 
 
 ```js
-import { Dom } from "./main.js"
+import { Dom } from "./main.js";
+// Import dom
+let dom = new Dom();
 
-const cls = new Dom();
+// When clicked to add new to do item on button
+dom.select("#add").on("click", () => {
+    // Taking input value and making input value empty
+    let val = dom.select("input").val();
+    dom.select("input").val("\n");
 
-// Add a paragraph to div
-cls.create("p").addClass("clicked").addText("hellloo").insert(".foo");
+    // Adding input item and it's value from input
+    dom.create("div").addClass("todo").insert("#todo-wrapper");
+    dom.create("p").addText(val).insertLast(".todo");
+    
+    // Adding update and delete buttons 
+    dom.create("button").addClass("delete").addText("delete").insertLast(".todo");
+    dom.create("button").addClass("update").addText("update").insertLast(".todo");
+   
+   // When clicked on the delete button remove the current parent to do  
+    dom.select("button.delete").on("click", (el) => {
+        el.parent().empty();
+    });
 
-// Toggle div when typing on input
-cls.select("input".)on("change", (e) => {
-    cls.toggle(".foo", "toggle")
-});
+    // When clicked on update button update the to do item value from input
+    dom.select("button.update").on("click", (el) => {
+        let newVal = dom.select("input").val();
+        el.prevSibling().prevSibling().addText(newVal); 
+    });
+})
 
-// When clicked on the button add new li element to ul
-cls.select(".btn").on("click", () => {
-    cls.create("li").addClass("clicked").addText("hello!").insert(".foo ul");    
-});
  ```
