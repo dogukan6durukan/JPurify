@@ -5,17 +5,23 @@ dom.select("#add").on("click", () => {
     dom.select("input").val("\n");
 
     dom.create("div").addClass("todo").insert("#todo-wrapper");
-    dom.create("p").addText(val).insertLast(".todo");
+    dom.create("p").text(val).insertLast(".todo");
     
-    dom.create("button").addClass("delete").addText("delete").insertLast(".todo");
-    dom.create("button").addClass("update").addText("update").insertLast(".todo");
+    dom.create("button").addClass("delete").text("delete").insertLast(".todo");
+    dom.create("button").addClass("update").text("update").insertLast(".todo");
    
+    dom.select(".todo p").on("click", (el) => {
+        el.css("text-decoration", "line-through");
+    })
+
     dom.select("button.delete").on("click", (el) => {
         el.parent().empty();
     });
 
     dom.select("button.update").on("click", (el) => {
-        let newVal = dom.select("input").val();
-        el.prevSibling().prevSibling().addText(newVal); 
+        let inpval = dom.select("input").val();
+        el.parent().find("p").text(inpval);
+        dom.select("input").val();
     });
+
 })

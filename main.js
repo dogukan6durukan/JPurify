@@ -18,7 +18,7 @@ export class Dom extends PlayGround{
                             el.addEventListener(event, (e) => {
                                 const self = new Dom();
                                 self.element = [e.currentTarget];
-                                callback.call(self, self);
+                                callback(self);
                             });
                         }
                     } 
@@ -31,25 +31,34 @@ export class Dom extends PlayGround{
 
     }
 
-
     select(el) {
         let element = document.querySelectorAll(el);
-        if(element) {
-            this.element = element;
-            return this;
+        if(element.length > 0) {
+            // Create new dom to avoid 'this' conflictions
+            const self = new Dom();
+            self.element = element;
+            return self;
         } else {
             console.error("The element doesn't exist");
         }
     }
 
+    // Take care here
     parent() {
         this.element = [this.element[0].parentElement];
         return this;
     }
 
+    // ! Take care here
     prevSibling() {
         this.element = [this.element[0].previousElementSibling];
-        console.log(this.element);
+        return this;
+    }
+
+
+    find(el) {
+        let elem = this.element[0].querySelector(el);
+        this.element = [elem];
         return this;
     }
 
@@ -58,7 +67,6 @@ export class Dom extends PlayGround{
         // Check for multiple elements
         this.element[0].remove();
     }
-
 
     create(el) {
         // Check if already exists or something
@@ -109,7 +117,7 @@ export class Dom extends PlayGround{
         return this;
     }
 
-    addText(text) {
+    text(text) {
         // console.log(this.element);
         if(this.element !== "") {
             for(let el of this.element) {
@@ -124,6 +132,15 @@ export class Dom extends PlayGround{
         if(this.element !== "") {
             for(let el of this.element) {
                 el.classList.add(className);
+            }
+            return this;
+        }
+    }
+
+    removeClass(className) {
+        if(this.element !== "") {
+            for(let el of this.element) {
+                el.classList.remove(className);
             }
             return this;
         }
@@ -171,15 +188,13 @@ export class Dom extends PlayGround{
     }
 
     val(val) {
-        if(this.element[0].value) {
-            
-            if(val) {
-                this.element[0].value = val;
-            }
-
-            return this.element[0].value;
+        if (typeof val !== "undefined") {
+            this.element[0].value = val;
+            return this;
         }
+        return this.element[0].value;
     }
+
 
     attr(name, setVal) {
         if(name) {
