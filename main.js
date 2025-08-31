@@ -8,28 +8,24 @@ export class Dom extends PlayGround{
         this.element = [];
     }
 
-    on(ev, callback) {
-        
-        if(ev && callback) {
-            if(this.element) {
-                for(let event of this.events) {
-                    if(event === ev) {
-                        for(let el of this.element) {
-                            el.addEventListener(event, (e) => {
-                                const self = new Dom();
-                                self.element = [e.currentTarget];
-                                callback(self);
-                            });
-                        }
-                    } 
-                }
+on(ev, callback) {
+    if (ev && callback) {
+        if (this.element && this.element.length > 0) {
+            for (let el of this.element) {
+                if (!el) continue; // null kontrolü
 
-            } else {
-                console.error("The element doesn't exist");
+                el.addEventListener(ev, (e) => {
+                    const self = new Dom();
+                    self.element = [e.currentTarget];
+                    callback(self);
+                });
             }
+        } else {
+            console.error("The element doesn't exist for event:", ev);
         }
-
     }
+}
+
 
     select(el) {
         let element = document.querySelectorAll(el);
@@ -68,12 +64,6 @@ export class Dom extends PlayGround{
         this.element[0].remove();
     }
 
-    create(el) {
-        // Check if already exists or something
-        let element = document.createElement(el);
-        this.element = [element];
-        return this;
-    }
 
     oddEvenFilter(isOdd) {
         this.element =  [...this.element].filter((el, i) => (i + 1) % 2 === (isOdd ? 1 : 0));
@@ -107,18 +97,25 @@ export class Dom extends PlayGround{
         }
     }
 
+    create(el) {
+    let element = document.createElement(el);
+    const self = new Dom();
+    self.element = [element];
+    return self;
+}
+
     insertLast(parent) {
         let parentEl = document.querySelectorAll(parent);
+        if (parentEl.length === 0) return this; 
         let last = parentEl[parentEl.length - 1];
-        for(let el of this.element) {
+        for (let el of this.element) {
             last.appendChild(el);
         }
-
         return this;
     }
 
+
     text(text) {
-        // console.log(this.element);
         if(this.element !== "") {
             for(let el of this.element) {
                 el.textContent = text;
@@ -188,11 +185,12 @@ export class Dom extends PlayGround{
     }
 
     val(val) {
-        if (typeof val !== "undefined") {
+        if(typeof val !== "undefined") {
             this.element[0].value = val;
-            return this;
-        }
-        return this.element[0].value;
+        } 
+        
+        return this.element[0].value
+
     }
 
 
