@@ -1,6 +1,6 @@
 JQuery like helper utility stuff but without leaving the Javascript syntax.
 
-
+To do app example using my library
 ```js
 import { Dom } from "./main.js";
 // Import dom
