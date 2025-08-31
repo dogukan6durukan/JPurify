@@ -12,8 +12,6 @@ on(ev, callback) {
     if (ev && callback) {
         if (this.element && this.element.length > 0) {
             for (let el of this.element) {
-                if (!el) continue; // null kontrolü
-
                 el.addEventListener(ev, (e) => {
                     const self = new Dom();
                     self.element = [e.currentTarget];
