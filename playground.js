@@ -1,4 +1,8 @@
 export class PlayGround {
+    // constructor() {
+    //     this.playground = "";
+    // }
+
     toggle(state, callback) {
         if(state) {
             let element = this.element[0];
@@ -16,7 +20,8 @@ export class PlayGround {
                 }
 
                 callback === undefined ? "" : callback();
-
+                // this.playground = "toggle";
+                
             } else {
                 console.error("Element doesn't exist!");
             }
@@ -27,4 +32,18 @@ export class PlayGround {
 
         return this;
     }
+
+    // fade() {
+    //     if(this.element) {
+    //         let opacity = 1;
+    //         let timer = setInterval(() => {
+    //             if(opacity < 0.1) {
+    //                 clearInterval(timer);
+    //             }
+    //             this.element.opacity = opacity;
+    //             opacity -= 0.1; 
+    //         }, 50)   
+    //     }
+    //     return this;
+    // }
 }

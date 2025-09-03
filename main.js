@@ -8,21 +8,38 @@ export class Dom extends PlayGround{
         this.element = [];
     }
 
-on(ev, callback) {
-    if (ev && callback) {
-        if (this.element && this.element.length > 0) {
-            for (let el of this.element) {
-                el.addEventListener(ev, (e) => {
-                    const self = new Dom();
-                    self.element = [e.currentTarget];
-                    callback(self);
-                });
+    static #_this () {
+
+        const dom = new Dom();
+
+        const apis = Object.getOwnPropertyNames(
+            Object.getPrototypeOf(dom)
+        ).filter(item => item !== "constructor");
+        
+        return apis;
+    }
+
+    static getApis() {
+        return this.#_this();
+    }
+
+
+    on(ev, callback) {
+        if (ev && callback) {
+            if (this.element && this.element.length > 0) {
+                for (let el of this.element) {
+                    el.addEventListener(ev, (e) => {
+                        const self = new Dom();
+                        self.element = [e.currentTarget];
+                        // Pass e also
+                        callback(self);
+                    });
+                }
+            } else {
+                console.error("The element doesn't exist for event:", ev);
             }
-        } else {
-            console.error("The element doesn't exist for event:", ev);
         }
     }
-}
 
 
     select(el) {
@@ -57,6 +74,15 @@ on(ev, callback) {
     }
 
     
+    contents() {
+        for(let el of this.element) {
+            return [el.childNodes];
+        }
+
+    }
+
+    children() {}
+
     empty() {
         // Check for multiple elements
         this.element[0].remove();
@@ -96,11 +122,11 @@ on(ev, callback) {
     }
 
     create(el) {
-    let element = document.createElement(el);
-    const self = new Dom();
-    self.element = [element];
-    return self;
-}
+        let element = document.createElement(el);
+        const self = new Dom();
+        self.element = [element];
+        return self;
+    }
 
     insertLast(parent) {
         let parentEl = document.querySelectorAll(parent);

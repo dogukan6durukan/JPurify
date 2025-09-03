@@ -1,40 +1,12 @@
 import { Dom } from "./main.js";
+import { PlayGround } from "./playground.js";
+  
 
 let dom = new Dom();
 
-dom.select("#add").on("click", () => {
-    let val = dom.select("input").val();
-    dom.select("input").val(""); 
+let a = Dom.getApis();
 
-    dom.create("div").addClass("todo").insert("#todo-wrapper");
+console.log(a);
 
-    let p = dom.create("p").text(val).insertLast(".todo");
-
-    let deleteBtn = dom.create("button")
-    .addClass("delete")
-    .text("delete")
-    .insertLast(".todo");
-
-    let updateBtn = dom.create("button")
-        .addClass("update")
-        .text("update")
-        .insertLast(".todo");
-
-    p.on("click", (el) => {
-        el.css("text-decoration", "line-through");
-    });
-
-    deleteBtn.on("click", (el) => {
-        el.parent().empty();
-    });
-
-    updateBtn.on("click", (el) => {
-        let inpval = dom.select("input").val();
-        
-        let parentDiv = el.parent();       
-        parentDiv.find("p").text(inpval);  
-        
-        dom.select("p").css("color", "red");
-        dom.select("input").val(""); 
-    });
-});
+// let a = dom.select("#todo-wrapper").contents();
+// console.log(a.filter((el) => { console.log(el.childNode === 3) }));
