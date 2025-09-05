@@ -67,18 +67,28 @@ export class Dom extends PlayGround{
     }
 
 
-    find(el) {
-        let elem = this.element[0].querySelector(el);
-        this.element = [elem];
+    find(element) {
+        let child = [];
+        for(let el of this.element) {
+            if(el.nodeType !== 3) {
+                let elem = el.querySelector(element);
+                if(elem) {
+                    child.push(elem);
+                }                
+            }            
+        }
+
+        this.element = child;
         return this;
     }
 
     
     contents() {
         for(let el of this.element) {
-            return [el.childNodes];
+            this.element = [...el.childNodes];
         }
 
+        return this;
     }
 
     children() {}
